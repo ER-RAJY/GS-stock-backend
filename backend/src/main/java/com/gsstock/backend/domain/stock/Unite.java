@@ -1,4 +1,4 @@
-package com.gsstock.backend.domain.auth;
+package com.gsstock.backend.domain.stock;
 
 public enum Unite {
     PIECE,

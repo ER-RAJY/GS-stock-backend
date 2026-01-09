@@ -1,6 +1,5 @@
 package com.gsstock.backend.domain.stock;
 
-import com.gsstock.backend.domain.auth.Unite;
 import jakarta.persistence.*;
 import lombok.*;
 
