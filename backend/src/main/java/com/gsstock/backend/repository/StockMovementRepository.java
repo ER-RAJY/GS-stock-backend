@@ -9,6 +9,9 @@ import org.springframework.data.repository.query.Param;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 
 public interface StockMovementRepository extends JpaRepository<StockMovement, Long> {
     @Query("""
@@ -35,4 +38,35 @@ public interface StockMovementRepository extends JpaRepository<StockMovement, Lo
             @Param("from") LocalDate from,
             @Param("to") LocalDate to
     );
+
+
+    @Query("""
+   select m.produit.id,
+          m.produit.designation,
+          sum(case when m.type = 'ENTREE' then m.quantite else 0 end),
+          sum(case when m.type = 'SORTIE' then m.quantite else 0 end)
+   from StockMovement m
+   where (:from is null or m.date >= :from)
+     and (:to is null or m.date <= :to)
+   group by m.produit.id, m.produit.designation
+""")
+    List<Object[]> consommationStock(
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
+    );
+    @Query("""
+    select m from StockMovement m
+    where (:produitId is null or m.produit.id = :produitId)
+      and (:type is null or m.type = :type)
+      and (:from is null or m.date >= :from)
+      and (:to is null or m.date <= :to)
+""")
+    Page<StockMovement> search(
+            @Param("produitId") Long produitId,
+            @Param("type") MovementType type,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to,
+            Pageable pageable
+    );
+
 }

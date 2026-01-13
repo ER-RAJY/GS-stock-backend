@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 
 @Service
 @RequiredArgsConstructor
@@ -79,5 +82,21 @@ public class StockMovementService {
                 .toList();
     }
 
+    public Page<StockMovementDto> searchPaged(
+            Long produitId,
+            String type,
+            LocalDate from,
+            LocalDate to,
+            Pageable pageable
+    ) {
+        MovementType movementType = null;
+        if (type != null) {
+            movementType = MovementType.valueOf(type.toUpperCase());
+        }
+
+        return stockMovementRepository
+                .search(produitId, movementType, from, to, pageable)
+                .map(this::toDto);
+    }
 
 }
