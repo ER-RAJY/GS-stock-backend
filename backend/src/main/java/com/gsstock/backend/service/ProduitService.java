@@ -34,15 +34,33 @@ public class ProduitService {
                 .orElseThrow(() -> new RuntimeException("Produit not found"));
         return toDto(produit, stockService.calculateStock(id));
     }
+    public List<ProduitDto> findStockAlerts() {
+
+        return produitRepository.findAll()
+                .stream()
+                .map(p -> {
+                    BigDecimal stock = stockService.calculateStock(p.getId());
+                    return toDto(p, stock);
+                })
+                .filter(ProduitDto::stockAlert)
+                .toList();
+    }
+
 
     private ProduitDto toDto(Produit p, BigDecimal stock) {
+        boolean alert = false;
+
+        if (p.getStockMin() != null) {
+            alert = stock.compareTo(p.getStockMin()) <= 0;
+        }
         return new ProduitDto(
                 p.getId(),
                 p.getDesignation(),
                 p.getUnite().name(),
                 p.getStockMin(),
                 stock,
-                p.isActive()
+                p.isActive(),
+                alert
         );
     }
     // ======================

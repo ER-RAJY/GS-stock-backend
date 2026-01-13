@@ -62,4 +62,12 @@ public class ProduitController {
         ));
     }
 
+    // ======================
+// STOCK ALERTS
+// ======================
+    @GetMapping("/alerts")
+    public List<ProduitDto> stockAlerts() {
+        return produitService.findStockAlerts();
+    }
+
 }

@@ -8,5 +8,6 @@ public record ProduitDto(
         String unite,
         BigDecimal stockMin,
         BigDecimal stockActuel,
-        boolean active
+        boolean active,
+        boolean stockAlert
 ) {}

@@ -30,17 +30,23 @@ public class SecurityConfig {
                 .requestMatchers("/api/produits/**").hasAnyRole("ADMIN", "COMPTABLE")
                 .requestMatchers("/api/movements/**").hasAnyRole("ADMIN", "COMPTABLE")
                 .requestMatchers("/api/achats/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
+                .requestMatchers("/api/stats/**").hasRole("ADMIN")
+                .requestMatchers("/api/stats/stock/**").hasAnyRole("ADMIN", "COMPTABLE")
+                .requestMatchers("/api/produits/alerts").hasAnyRole("ADMIN", "COMPTABLE")
+                .requestMatchers("/api/export/**").hasRole("ADMIN")
+                .requestMatchers("/api/export/**").hasRole("ADMIN")
+
+                    .anyRequest().authenticated()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration config
     ) throws Exception {
         return config.getAuthenticationManager();
     }
+
 }
