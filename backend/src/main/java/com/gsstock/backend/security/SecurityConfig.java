@@ -4,6 +4,7 @@ import com.gsstock.backend.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.*;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -37,8 +38,17 @@ public class SecurityConfig {
                 .requestMatchers("/api/produits/alerts").hasAnyRole("ADMIN", "COMPTABLE")
                 .requestMatchers("/api/export/**").hasRole("ADMIN")
                 .requestMatchers("/api/export/**").hasRole("ADMIN")
+                // Fournisseurs
+                .requestMatchers("/api/fournisseurs/**").hasAnyRole("ADMIN", "COMPTABLE")
 
-                    .anyRequest().authenticated()
+                // Only ADMIN can create, update, delete fournisseurs
+                .requestMatchers(HttpMethod.POST, "/api/fournisseurs/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/fournisseurs/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/fournisseurs/**").hasRole("ADMIN")
+
+                // Stock stats
+                .requestMatchers("/api/stats/stock/**").hasAnyRole("ADMIN", "COMPTABLE")
+                .anyRequest().authenticated()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

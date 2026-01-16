@@ -2,8 +2,10 @@ package com.gsstock.backend.config;
 
 import com.gsstock.backend.domain.auth.Role;
 import com.gsstock.backend.domain.auth.User;
+import com.gsstock.backend.domain.purchase.Fournisseur;
 import com.gsstock.backend.domain.stock.Produit;
 import com.gsstock.backend.domain.stock.Unite;
+import com.gsstock.backend.repository.FournisseurRepository;
 import com.gsstock.backend.repository.ProduitRepository;
 import com.gsstock.backend.repository.UserRepository;
 import com.gsstock.backend.service.StockService;
@@ -23,12 +25,25 @@ public class DataInitializer implements CommandLineRunner {
     private final ProduitRepository produitRepository;
     private final StockService stockService;
     private final PasswordEncoder passwordEncoder;
+    private final FournisseurRepository fournisseurRepository;
 
     @Override
     public void run(String... args) {
-
+        seedFournisseurs();
         seedUsers();
         seedProduits();
+    }
+
+    private void seedFournisseurs() {
+
+        if (fournisseurRepository.count() > 0) return;
+
+        fournisseurRepository.save(new Fournisseur(
+                null, "FOURNISSEUR A", "ICE-001", "0600000000", "a@demo.com", "Casablanca", true
+        ));
+        fournisseurRepository.save(new Fournisseur(
+                null, "FOURNISSEUR B", "ICE-002", "0611111111", "b@demo.com", "Rabat", true
+        ));
     }
 
     // ======================

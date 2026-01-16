@@ -68,5 +68,21 @@ public interface StockMovementRepository extends JpaRepository<StockMovement, Lo
             @Param("to") LocalDate to,
             Pageable pageable
     );
+    @Query("""
+    select m.produit.id,
+           m.produit.designation,
+           coalesce(sum(m.quantite), 0)
+    from StockMovement m
+    where m.type = 'SORTIE'
+      and (:from is null or m.date >= :from)
+      and (:to is null or m.date <= :to)
+    group by m.produit.id, m.produit.designation
+    order by coalesce(sum(m.quantite), 0) desc
+""")
+    List<Object[]> topSorties(
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to,
+            Pageable pageable
+    );
 
 }
