@@ -48,7 +48,11 @@ public class SecurityConfig {
 
                 // Stock stats
                 .requestMatchers("/api/stats/stock/**").hasAnyRole("ADMIN", "COMPTABLE")
-                .anyRequest().authenticated()
+
+                // Achats PDF  ADMIN
+                .requestMatchers(HttpMethod.GET, "/api/achats/*/pdf").hasRole("ADMIN")
+
+                    .anyRequest().authenticated()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

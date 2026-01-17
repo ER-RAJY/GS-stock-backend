@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; }
+        .header { display: flex; justify-content: space-between; }
+        .logo img { width: 120px; }
+        h2 { margin: 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #333; padding: 6px; text-align: left; }
+        th { background: #f0f0f0; }
+        .totals { margin-top: 20px; width: 40%; float: right; }
+        .footer { margin-top: 80px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="logo">
+        <img src="logo.png"/>
+    </div>
+    <div>
+        <h2>Achat</h2>
+        <p>Référence: {{reference}}</p>
+        <p>Date: {{date}}</p>
+        <p>Fournisseur: {{fournisseur}}</p>
+    </div>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>Produit</th>
+        <th>Quantité</th>
+        <th>Prix HT</th>
+        <th>Total HT</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{lines}}
+    </tbody>
+</table>
+
+<table class="totals">
+    <tr><th>Total HT</th><td>{{totalHT}}</td></tr>
+    <tr><th>Total TVA</th><td>{{totalTVA}}</td></tr>
+    <tr><th>Total TTC</th><td>{{totalTTC}}</td></tr>
+</table>
+
+<div class="footer">
+    <p>Signature & Cachet</p>
+</div>
+
+</body>
+</html>
