@@ -52,6 +52,9 @@ public class SecurityConfig {
                 // Achats PDF  ADMIN
                 .requestMatchers(HttpMethod.GET, "/api/achats/*/pdf").hasRole("ADMIN")
 
+                    // Company logo accessible to all
+                    .requestMatchers("/api/settings/company/logo").permitAll()
+
                     .anyRequest().authenticated()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 
+import static com.gsstock.backend.service.pdf.XmlEscaper.esc;
+
 @Service
 @RequiredArgsConstructor
 public class AchatPdfService {
@@ -35,11 +37,20 @@ public class AchatPdfService {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
 
             PdfRendererBuilder builder = new PdfRendererBuilder();
-            builder.withHtmlContent(html, null);
+
+            // Base URI for HTML (images, css if any)
+            builder.withHtmlContent(html, "classpath:/pdf/");
+
             builder.toStream(out);
+            builder.useFastMode();
+            builder.useDefaultPageSize(210, 297, PdfRendererBuilder.PageSizeUnits.MM);
+
             builder.run();
 
-            return out.toByteArray();
+            byte[] pdfBytes = out.toByteArray();
+            System.out.println("PDF generated, size = " + pdfBytes.length);
+
+            return pdfBytes;
 
         } catch (Exception e) {
             throw new RuntimeException("PDF generation failed", e);
@@ -49,7 +60,8 @@ public class AchatPdfService {
     private String loadTemplate() throws Exception {
         return new String(
                 new ClassPathResource("pdf/templates/achat.html")
-                        .getInputStream().readAllBytes(),
+                        .getInputStream()
+                        .readAllBytes(),
                 StandardCharsets.UTF_8
         );
     }
@@ -65,21 +77,21 @@ public class AchatPdfService {
                         <td>%s</td>
                     </tr>
                 """.formatted(
-                        l.produit(),
-                        l.quantite(),
-                        l.prixHT(),
-                        l.totalHT()
+                        esc(l.produit()),
+                        esc(l.quantite().toString()),
+                        esc(l.prixHT().toString()),
+                        esc(l.totalHT().toString())
                 ))
                 .reduce("", String::concat);
 
         return html
-                .replace("{{reference}}", data.reference())
-                .replace("{{date}}", data.date().toString())
-                .replace("{{fournisseur}}", data.fournisseur())
+                .replace("{{reference}}", esc(data.reference()))
+                .replace("{{date}}", esc(data.date().toString()))
+                .replace("{{fournisseur}}", esc(data.fournisseur()))
                 .replace("{{lines}}", linesHtml)
-                .replace("{{totalHT}}", data.totalHT().toString())
-                .replace("{{totalTVA}}", data.totalTVA().toString())
-                .replace("{{totalTTC}}", data.totalTTC().toString());
+                .replace("{{totalHT}}", esc(data.totalHT().toString()))
+                .replace("{{totalTVA}}", esc(data.totalTVA().toString()))
+                .replace("{{totalTTC}}", esc(data.totalTTC().toString()));
     }
 
     private AchatPdfData mapToPdfData(Achat achat) {
