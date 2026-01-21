@@ -15,4 +15,5 @@ public record AchatDto(
         BigDecimal totalTTC,
         Long fournisseurId,
         List<AchatLineDto> lines
+
 ) {}

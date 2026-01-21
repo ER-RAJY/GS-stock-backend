@@ -53,7 +53,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/achats/*/pdf").hasRole("ADMIN")
 
                     // Company logo accessible to all
-                    .requestMatchers("/api/settings/company/logo").permitAll()
+                .requestMatchers("/api/settings/company/logo").permitAll()
 
                     .anyRequest().authenticated()
             )

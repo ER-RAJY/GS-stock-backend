@@ -1,6 +1,7 @@
 package com.gsstock.backend.domain.stock;
 
 import com.gsstock.backend.domain.auth.User;
+import com.gsstock.backend.domain.common.Chantier;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,4 +35,9 @@ public class StockMovement {
 
     @ManyToOne
     private User createdBy;
+
+    @ManyToOne
+    @JoinColumn(name = "chantier_id")
+    private Chantier chantier;
+
 }

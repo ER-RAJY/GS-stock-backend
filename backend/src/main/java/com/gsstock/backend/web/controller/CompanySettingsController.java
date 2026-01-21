@@ -8,25 +8,31 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 @RestController
 @RequestMapping("/api/settings/company")
 @RequiredArgsConstructor
 public class CompanySettingsController {
 
-    private final CompanySettingsService service;
+    private final CompanySettingsService companySettingsService;
+
+    // 🔹 GET company settings
+    @GetMapping
+    public CompanySettings get() {
+        return companySettingsService.get();
+    }
 
     // 🔹 Upload logo (ADMIN)
     @PostMapping("/logo")
     @PreAuthorize("hasRole('ADMIN')")
     public void uploadLogo(@RequestParam("file") MultipartFile file) {
-        service.saveLogo(file);
+        companySettingsService.updateLogo(file);
     }
 
     // 🔹 Get logo (PUBLIC / PDF)
     @GetMapping("/logo")
     public ResponseEntity<byte[]> getLogo() {
-        CompanySettings s = service.get();
+
+        CompanySettings s = companySettingsService.get();
 
         if (s.getLogo() == null) {
             return ResponseEntity.notFound().build();

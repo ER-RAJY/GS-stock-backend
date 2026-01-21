@@ -11,7 +11,14 @@ public record AchatPdfData(
         List<Line> lines,
         BigDecimal totalHT,
         BigDecimal totalTVA,
-        BigDecimal totalTTC
+        BigDecimal totalTTC,
+
+        // Footer légal
+        String companyName,
+        String ice,
+        String address,
+        String phone,
+        String email
 ) {
     public record Line(
             String produit,

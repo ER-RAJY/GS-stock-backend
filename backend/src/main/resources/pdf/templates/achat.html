@@ -11,7 +11,15 @@
         th, td { border: 1px solid #333; padding: 6px; text-align: left; }
         th { background: #f0f0f0; }
         .totals { margin-top: 20px; width: 40%; float: right; }
-        .footer { margin-top: 80px; }
+        .footer {
+            margin-top: 60px;
+            font-size: 10px;
+            color: #555;
+            text-align: center;
+        }
+        .footer hr {
+            margin-bottom: 6px;
+        }
     </style>
 </head>
 <body>
@@ -49,8 +57,16 @@
 </table>
 
 <div class="footer">
-    <p>Signature &amp; Cachet</p>
+    <hr/>
+    <p><strong>{{companyName}}</strong></p>
+    <p>
+        ICE: {{ice}} |
+        Adresse: {{address}} |
+        Tél: {{phone}} |
+        Email: {{email}}
+    </p>
 </div>
+
 
 </body>
 </html>

@@ -1,5 +1,6 @@
 package com.gsstock.backend.domain.purchase;
 
+import com.gsstock.backend.domain.common.Chantier;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -37,4 +38,9 @@ public class Achat {
 
     @OneToMany(mappedBy = "achat", cascade = CascadeType.ALL)
     private List<AchatLine> lines;
+
+    @ManyToOne
+    @JoinColumn(name = "chantier_id")
+    private Chantier chantier;
+
 }

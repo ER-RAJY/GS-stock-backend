@@ -9,23 +9,23 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "company_settings")
 public class CompanySettings {
 
-    @Id
-    private Long id = 1L; // singleton row
+        @Id
+        private Long id = 1L;
 
-    private String companyName;
-    private String email;
-    private String phone;
+        private String companyName;
+        private String ice;
+        private String address;
+        private String phone;
+        private String email;
 
-    @Lob
-    @Column(columnDefinition = "LONGBLOB")
-    private byte[] logo;
+        @Lob
+        @Column(columnDefinition = "LONGBLOB")
+        private byte[] logo;
 
-    private String logoContentType;
-
-    // getters & setters
+        private String logoContentType;
 }

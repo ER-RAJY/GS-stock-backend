@@ -3,16 +3,26 @@ package com.gsstock.backend.domain.common;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
+@Table(name = "chantier")
 @Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
 public class Chantier {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String code;
+    @Column(nullable = false)
     private String nom;
+
+    private String description;
+
+    private String adresse;
+
     private boolean active = true;
+
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
 }

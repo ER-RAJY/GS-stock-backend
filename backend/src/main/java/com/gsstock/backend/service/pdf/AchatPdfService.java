@@ -1,8 +1,10 @@
 package com.gsstock.backend.service.pdf;
 
+import com.gsstock.backend.domain.common.CompanySettings;
 import com.gsstock.backend.domain.purchase.Achat;
 import com.gsstock.backend.domain.purchase.AchatStatus;
 import com.gsstock.backend.repository.AchatRepository;
+import com.gsstock.backend.service.CompanySettingsService;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
@@ -16,7 +18,7 @@ import static com.gsstock.backend.service.pdf.XmlEscaper.esc;
 @Service
 @RequiredArgsConstructor
 public class AchatPdfService {
-
+    private final CompanySettingsService companySettingsService;
     private final AchatRepository achatRepository;
 
     public byte[] generatePdf(Long achatId) {
@@ -84,6 +86,7 @@ public class AchatPdfService {
                 ))
                 .reduce("", String::concat);
 
+
         return html
                 .replace("{{reference}}", esc(data.reference()))
                 .replace("{{date}}", esc(data.date().toString()))
@@ -91,10 +94,21 @@ public class AchatPdfService {
                 .replace("{{lines}}", linesHtml)
                 .replace("{{totalHT}}", esc(data.totalHT().toString()))
                 .replace("{{totalTVA}}", esc(data.totalTVA().toString()))
-                .replace("{{totalTTC}}", esc(data.totalTTC().toString()));
+                .replace("{{totalTTC}}", esc(data.totalTTC().toString()))
+
+                // Footer légal
+                .replace("{{companyName}}", esc(data.companyName()))
+                .replace("{{ice}}", esc(data.ice()))
+                .replace("{{address}}", esc(data.address()))
+                .replace("{{phone}}", esc(data.phone()))
+                .replace("{{email}}", esc(data.email()));
+
     }
 
     private AchatPdfData mapToPdfData(Achat achat) {
+
+        CompanySettings cs = companySettingsService.get();
+
         return new AchatPdfData(
                 achat.getReferenceFacture(),
                 achat.getDate(),
@@ -109,7 +123,14 @@ public class AchatPdfService {
                         .toList(),
                 achat.getTotalHT(),
                 achat.getTotalTVA(),
-                achat.getTotalTTC()
+                achat.getTotalTTC(),
+
+                // Footer légal
+                cs.getCompanyName(),
+                cs.getIce(),
+                cs.getAddress(),
+                cs.getPhone(),
+                cs.getEmail()
         );
     }
 }
